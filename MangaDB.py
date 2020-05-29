@@ -21,7 +21,7 @@ def delete():
     connectDB = sqlite3.connect('manga_database.db')
     cDB = connectDB.cursor()
 #delete records
-    cDB.execute("DELETE from manga WHERE oid = " + delBox.get())
+    cDB.execute("DELETE from manga WHERE oid = " + delBox.get())    
 
 
 
