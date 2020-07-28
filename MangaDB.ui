@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.0">
+  <object class="tk.Frame" id="mainWindow">
+    <property name="height">200</property>
+    <property name="highlightbackground">#cfcfcf</property>
+    <property name="highlightcolor">#cfcfcf</property>
+    <property name="width">200</property>
+    <layout manager="pack">
+      <property name="propagate">True</property>
+      <property name="side">top</property>
+    </layout>
+    <child>
+      <object class="tk.Label" id="mainLbl">
+        <property name="anchor">e</property>
+        <property name="background">#607D8B</property>
+        <property name="compound">top</property>
+        <property name="cursor">based_arrow_down</property>
+        <property name="font">{Segoe UI Semilight} 20 {}</property>
+        <property name="foreground">#ffffff</property>
+        <property name="justify">center</property>
+        <property name="takefocus">false</property>
+        <property name="text" translatable="yes">Manga Database</property>
+        <layout manager="pack">
+          <property name="fill">x</property>
+          <property name="propagate">True</property>
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Button" id="createDB">
+        <property name="anchor">n</property>
+        <property name="bitmap">error</property>
+        <property name="cursor">arrow</property>
+        <property name="text" translatable="yes">button_3</property>
+        <layout manager="pack">
+          <property name="ipadx">70</property>
+          <property name="ipady">10</property>
+          <property name="pady">5</property>
+          <property name="propagate">True</property>
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+  </object>
+</interface>

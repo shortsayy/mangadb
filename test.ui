@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.0">
+  <object class="tk.Frame" id="mainWindows">
+    <property name="background">white</property>
+    <property name="height">200</property>
+    <property name="takefocus">true</property>
+    <property name="width">200</property>
+    <layout manager="pack">
+      <property name="propagate">True</property>
+      <property name="side">top</property>
+    </layout>
+    <child>
+      <object class="tk.Label" id="sansUndertale">
+        <property name="cursor">arrow</property>
+        <property name="font">TkDefaultFont</property>
+        <property name="justify">left</property>
+        <property name="takefocus">false</property>
+        <property name="text" translatable="yes">the fitness gram pacer test</property>
+        <layout manager="pack">
+          <property name="propagate">True</property>
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Entry" id="entry_2">
+        <property name="cursor">based_arrow_down</property>
+        <property name="font">TkTextFont</property>
+        <property name="relief">flat</property>
+        <property name="text" translatable="yes">Enter
+</property>
+        <property name="validate">focus</property>
+        <layout manager="pack">
+          <property name="propagate">True</property>
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Button" id="testButton">
+        <property name="command">test</property>
+        <property name="compound">top</property>
+        <property name="cursor">arrow</property>
+        <property name="font">{Bahnschrift Light SemiCondensed} 12 {}</property>
+        <property name="image">kisspng-television-animation-clip-art-pocoyo-5ac1aca39b32d8.6381813315226420836357.png</property>
+        <property name="justify">left</property>
+        <property name="overrelief">ridge</property>
+        <property name="relief">flat</property>
+        <property name="takefocus">false</property>
+        <property name="text" translatable="yes">gayass</property>
+        <layout manager="pack">
+          <property name="propagate">True</property>
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+  </object>
+</interface>

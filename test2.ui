@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.0">
+  <object class="ttk.Frame" id="mainWindow">
+    <property name="height">200</property>
+    <property name="width">200</property>
+    <layout manager="pack">
+      <property name="propagate">True</property>
+      <property name="side">top</property>
+    </layout>
+    <child>
+      <object class="ttk.Label" id="Hello World!">
+        <property name="anchor">center</property>
+        <property name="font">{Arial} 48 {}</property>
+        <property name="image">w.png</property>
+        <property name="justify">center</property>
+        <property name="padding">50</property>
+        <property name="text" translatable="yes">Hello World!</property>
+        <layout manager="pack">
+          <property name="anchor">center</property>
+          <property name="expand">false</property>
+          <property name="padx">50</property>
+          <property name="pady">50</property>
+          <property name="propagate">True</property>
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Button" id="quitBtn">
+        <property name="command">quit1</property>
+        <property name="cursor">arrow</property>
+        <property name="state">normal</property>
+        <property name="takefocus">false</property>
+        <property name="text" translatable="yes">Quit</property>
+        <layout manager="pack">
+          <property name="anchor">center</property>
+          <property name="propagate">True</property>
+          <property name="side">right</property>
+        </layout>
+      </object>
+    </child>
+  </object>
+</interface>
