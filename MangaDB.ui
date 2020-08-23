@@ -35,9 +35,8 @@
         <property name="activebackground">#FF5252</property>
         <property name="activeforeground">#ffffff</property>
         <property name="background">#FF5252</property>
-        <property name="compound">top</property>
-        <property name="cursor">arrow</property>
-        <property name="font">{Calibri} 12 {}</property>
+        <property name="compound">left</property>
+        <property name="font">{Calibri Light} 11 {}</property>
         <property name="foreground">#ffffff</property>
         <property name="highlightbackground">#607D8B</property>
         <property name="highlightcolor">#609998</property>
@@ -55,21 +54,54 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Button" id="button_1">
-        <property name="text" translatable="yes">Open Database</property>
+      <object class="tk.Frame" id="openFrm">
+        <property name="height">200</property>
+        <property name="highlightbackground">#cfcfcf</property>
+        <property name="width">200</property>
         <layout manager="pack">
           <property name="propagate">True</property>
           <property name="side">top</property>
         </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Button" id="button_2">
-        <property name="text" translatable="yes">Delete Database</property>
-        <layout manager="pack">
-          <property name="propagate">True</property>
-          <property name="side">top</property>
-        </layout>
+        <child>
+          <object class="tk.Button" id="openDB">
+            <property name="activebackground">#FF5252</property>
+            <property name="activeforeground">#ffffff</property>
+            <property name="background">#FF5252</property>
+            <property name="command">open_button_clicked</property>
+            <property name="font">{Calibri Light} 11 {}</property>
+            <property name="foreground">#ffffff</property>
+            <property name="highlightbackground">#607D8B</property>
+            <property name="highlightcolor">#609998</property>
+            <property name="overrelief">flat</property>
+            <property name="relief">flat</property>
+            <property name="text" translatable="yes">Open Database</property>
+            <layout manager="pack">
+              <property name="ipadx">62</property>
+              <property name="ipady">5</property>
+              <property name="propagate">True</property>
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Frame" id="delFrm">
+            <property name="height">200</property>
+            <property name="width">200</property>
+            <layout manager="pack">
+              <property name="propagate">True</property>
+              <property name="side">top</property>
+            </layout>
+            <child>
+              <object class="tk.Button" id="delDB">
+                <property name="text" translatable="yes">button_1</property>
+                <layout manager="pack">
+                  <property name="propagate">True</property>
+                  <property name="side">top</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
   </object>
