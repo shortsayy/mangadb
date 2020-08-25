@@ -15,6 +15,14 @@
 
 #main window for the  database
 from tkinter import  *
+import tkinter as tk
+from tkinter import  ttk
+from tkinter import  messagebox
+import mysql.connector
+
+#local mySQL creation for database
+mdb = mysql.connector.connect(host="127.0.0.1", user="user", password="shorts", database="mangaDB", port=3306)
+cursor = mdb.cursor()
 
 root = Tk()
 root.title("Manga DB")
@@ -22,20 +30,45 @@ root.geometry('400x400+100+20') # Starting size/position: width x height + leftD
 root.minsize(200,200) #Minimum size: width, height
 
 #Frame mainwindow for the heading to be done.
-root.config(background='#CFD8DC', container='true', height='200', highlightbackground='#cfcfcf')
-root.config(highlightcolor='#cfcfcf', relief='raised', width='200')
-root.pack(side='top')
+root.config()
+
 
 #mainwindow Label (the title on the top of the program)
 #mainLbl = tk.Label(root ,anchor='center' , background="#607D8B", compound='top', font=('Segoe UI Semibold', 16 ), foreground="#ffffff", justify='center' , text= 'MangaDB')
 #mainLbl.pack(fill='x')
 
-#treeview Frame
-treeviewFrm= Frame(root, bg='gray')
-treeviewFrm.pack()
+
+#These frames are created for  the Database
+wrapperDB = LabelFrame(root, text="Manga Database")
+wrapperDB.pack(fill="both", expand= "yes")
+frmSch = Frame(root, text="Search")
+frmSch.pack()
+frmEntries = Frame(root)
+frmEntries.pack()
 
 #Actual treeview
-DB =  ttk.Treeview.master() #done to create basic treeview functions
+DB =  ttk.Treeview(wrapperDB,  columns=(1,2,3,4), show="headings", height="6") #done to create basic treeview functions
+DB.column(0, width=270, minwidth=270, stretch=Tk.NO)
+DB.column("one", width=150, minwidth=150, stretch=Tk.NO)
+DB.column("two", width=400, minwidth=200)
+DB.column("three", width=80, minwidth=50, stretch=Tk.NO)
+#treeview heading, they' are for the columns
+DB.heading(0, text="ID", anchor=Tk.W)
+DB.heading(1, text="Author", anchor=Tk.W)
+DB.heading(2, text="Title", anchor=Tk.W)
+DB.heading(3, text="Chapter", anchor=Tk.W)
+DB.heading(4, text="Status", anchor=Tk.W)
+
+#functions
+def  update():
+    for i in rows:
+        DB.insert(' ', 'end', values=i)
+
+#query for  mySQL
+query= "SELECT id, manga_author, manga_title, manga_chapter, manga_status"
+cursor.execute(query)
+rows = cursor.fetchall()
+update(rows)
 
 
 
