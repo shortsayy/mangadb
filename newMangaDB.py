@@ -20,9 +20,8 @@ from tkinter import  ttk
 from tkinter import  messagebox
 import mysql.connector
 
-#local mySQL creation for database
-mdb = mysql.connector.connect(host="127.0.0.1", user="user", password="shorts", database="mangaDB", port=3306)
-cursor = mdb.cursor()
+
+
 
 root = Tk()
 root.title("Manga DB")
@@ -37,6 +36,22 @@ root.config()
 #mainLbl = tk.Label(root ,anchor='center' , background="#607D8B", compound='top', font=('Segoe UI Semibold', 16 ), foreground="#ffffff", justify='center' , text= 'MangaDB')
 #mainLbl.pack(fill='x')
 
+#local mySQL creation for database
+mdb = mysql.connector.connect(host="localhost",
+                              user="shorts",
+                              password="shorts",
+                              port=3306
+)
+cursor = mdb.cursor()
+cursor.execute("SHOW DATABASES")
+cc = print(cursor.execute())
+
+cDB = input("Would you like to create a database?: (y/n)")
+if cDB == 'y':
+    cursor.execute("SHOW DATABASES")
+    cursor
+#function to ask user to create a database
+def create():
 
 #These frames are created for  the Database
 wrapperDB = LabelFrame(root, text="Manga Database")
@@ -49,9 +64,11 @@ frmEntries.pack()
 #Actual treeview
 DB =  ttk.Treeview(wrapperDB,  columns=(1,2,3,4), show="headings", height="6") #done to create basic treeview functions
 DB.column(0, width=270, minwidth=270, stretch=Tk.NO)
-DB.column("one", width=150, minwidth=150, stretch=Tk.NO)
-DB.column("two", width=400, minwidth=200)
-DB.column("three", width=80, minwidth=50, stretch=Tk.NO)
+DB.column(1, width=150, minwidth=150, stretch=Tk.NO)
+DB.column(2, width=400, minwidth=200)
+DB.column(3, width=80, minwidth=50, stretch=Tk.NO)
+DB.column(4, width=80, minwidth=50, stretch=Tk.NO)
+
 #treeview heading, they' are for the columns
 DB.heading(0, text="ID", anchor=Tk.W)
 DB.heading(1, text="Author", anchor=Tk.W)
