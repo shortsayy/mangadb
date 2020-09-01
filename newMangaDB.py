@@ -7,7 +7,7 @@
 # FEATURES:  Does a Treeview Database to store data
 # Has a key ID for the search bar
 # Can delete data from treeview
-# has the option whether to make the  Manga title dropedd/complete/On Hold
+# has the option whether to make the  Manga title dropped/complete/On Hold
 # 3rd revision due to pygubu (my fault)  wasting my time, so compromises must be made
 
 
@@ -37,12 +37,27 @@ def search():
     rows = cursor.fetchall()
     update(rows)
 
+
 def clear():
     query = "SELECT ID, Author, Title, Chapter, Status"
     cursor.execute(query)
     rows = cursor.fetchall(rows)
     update(rows)
 
+
+def fetch(event):
+    return True
+
+
+def update_mangadb():
+    return True
+
+
+def add_mangadb():
+    return True
+
+def delete_mangadb():
+    return True
 
 # local mySQL creation for database
 mdb = mysql.connector.connect(host="localhost",
@@ -55,24 +70,17 @@ mdb = mysql.connector.connect(host="localhost",
 cursor = mdb.cursor(buffered=True)  # buffered cursor means that the database will fetch all rows
 cursor.execute("SHOW DATABASES")
 
-# cursor.execute("CREATE DATABASE mangadatabase")
-# cc = print(cursor.execute())
-
-
-# if else statement for a function below(incomplete, prototype)
-# cDB = input("Would you like to create a database?: (y/n)")
-# if cDB == 'y':
-# cursor.execute("SHOW DATABASES")
-# cursor
-
-# function to ask user to create a database
-# def create():
-
-# These frames are created for  the Database
+# These frames are created for the Database
 root = Tk()
 schVar = StringVar()
+t1 = StringVar()
+t2 = StringVar()
+t3 = StringVar()
+t4 = StringVar()
+
+# wrapper and frames
 wrapperDB = LabelFrame(root, text="Manga Database")
-wrapperDB.pack(fill="both", expand="yes")
+wrapperDB.pack(fill="both")
 frmSch = Frame(root)
 frmSch.pack()
 frmEntries = Frame(root)
@@ -81,25 +89,62 @@ frmEntries.pack()
 # Actual treeview
 DB = ttk.Treeview(wrapperDB, columns=(1, 2, 3, 4, 5), show="headings",
                   height="6")  # done to create basic treeview functions
-#treeview heading, they' are for the columns
+
+# treeview heading, they' are for the columns
 DB.heading(1, text="ID")
 DB.heading(2, text="Author")
 DB.heading(3, text="Title")
 DB.heading(4, text="Chapter")
 DB.heading(5, text="Status")
+DB.bind('<Double 1>', fetch)
 DB.pack()
-
 
 # search bar section etc
 lblSearch = Label(frmSch, text="Search")
 lblSearch.pack(side=tk.LEFT, padx=10)
 schEnt = Entry(frmSch,
-               textvariable=schVar)  # textvariable is where a text associates with a StringVar to the contents of an Entry field.
+               textvariable=schVar)  # textvariable is where a text associates with a StringVar to the contents of an
+# Entry field.
 schEnt.pack(side=tk.LEFT, padx=6)
 schBtn = Button(frmSch, text="Search Manga", command=search)
 schBtn.pack(side=tk.LEFT, padx=6)
 clsBtn = Button(frmSch, text="Clear", command=clear)
 clsBtn.pack(side=tk.LEFT, padx=6)
+
+# Manga field Labels, Entries, and Buttons
+lblAuth = Label(frmEntries, text="Author")
+lblAuth.grid(column=0, row=0, padx=5, pady=3)
+entTitle = Entry(frmEntries, textvariable=t1)
+entTitle.grid(column=1, row=1, padx=5, pady=3)
+
+lblTitle = Label(frmEntries, text="Title")
+lblTitle.grid(column=0, row=1, padx=5, pady=3)
+entTitle = Entry(frmEntries, textvariable=t2)
+entTitle.grid(column=1, row=1, padx=5, pady=3)
+
+lblChp = Label(frmEntries, text="Chapters")
+lblChp.grid(column=0, row=2, padx=5, pady=3)
+entChp = Entry(frmEntries, textvariable=t3)
+entChp.grid(column=1, row=3, padx=5, pady=3)
+
+lblSts = Label(frmEntries, text="Status")
+lblSts.grid(column=0, row=4, padx=5, pady=3)
+cbSts = ttk.Combobox(frmEntries, values=[
+    "",
+    "Completed",
+    "On Hold",
+    "Dropped"
+], textvariable=t4)
+cbSts.grid(column=1, row=5, padx=5, pady=3)
+
+btnUpdate = Button(frmEntries, text="Update Database", command=update_mangadb)
+btnUpdate.grid(row=1, column=2, padx=5, pady=3)
+
+btnAdd = Button(frmEntries, text="Add to Database", command=add_mangadb)
+btnAdd.grid(row=2, column=2, padx=5, pady=3)
+
+btnDel = Button(frmEntries, text="Delete Data", command=delete_mangadb)
+btnDel.grid(row=3, column=2, padx=5, pady=3)
 
 root.title("Manga DB")
 root.geometry('400x400+100+20')  # Starting size/position: width x height + leftDistance + topDistance
