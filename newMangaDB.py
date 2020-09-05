@@ -38,7 +38,7 @@ cursor.execute("SHOW DATABASES")
 def update(rows):
     DB.delete(*DB.get_children())  # gets
     for i in rows:
-        DB.insert(' ', 'end', values=i)
+        DB.insert('', 'end', values=i)
 
 
 def search():
@@ -49,10 +49,13 @@ def search():
     update(rows)
 
 
-def clear():
-    query = "SELECT ID, Author, Title, Chapter, Status"
-    cursor.execute(query, multi=True)
+def external_clear():
     rows = cursor.fetchall(rows)
+    query = "SELECT ID, Author, Title, Chapter, Status FROM mangatable"
+    def internal_clear():
+        global query
+        global rows
+        cursor.execute(query)
     update(rows)
 
 
@@ -80,7 +83,7 @@ def external_add_mangadb():
         global sts
         query = "INSERT into mangatable(ID, Author, Title, Chapter, Status), VALUES(NOT NULL, %s, %s, %s, %s, NOW())"#null generates auto increment number from mysql
         cursor.execute(query,(au, ttl, chp, sts), multi=True)
-    clear() #updates table
+    external_clear() #updates table
 
 
 def delete_mangadb():
@@ -89,7 +92,7 @@ def delete_mangadb():
     if messagebox.askyesno("Are you sure?", "Delete Manga title?"):
         query = "DELETE FROM Author WHERE ID ="+ID
         cursor.execute(query)
-        clear()
+        external_clear()
     else:
         return True
 
@@ -122,7 +125,10 @@ DB.heading(5, text="Status")
 DB.bind('<Double 1>', fetch)
 DB.pack()
 
-
+query= "SELECT ID, Author, Title, Chapter, Status FROM mangatable"
+cursor.execute(query)
+rows = cursor.fetchall()
+update(rows)
 
 # search bar section etc
 lblSearch = Label(frmSch, text="Search")
@@ -133,7 +139,7 @@ schEnt = Entry(frmSch,
 schEnt.pack(side=tk.LEFT, padx=6)
 schBtn = Button(frmSch, text="Search Manga", command=search)
 schBtn.pack(side=tk.LEFT, padx=6)
-clsBtn = Button(frmSch, text="Clear", command=clear)
+clsBtn = Button(frmSch, text="Clear", command=external_clear)
 clsBtn.pack(side=tk.LEFT, padx=6)
 
 # Manga field Labels, Entries, and Buttons
