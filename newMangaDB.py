@@ -35,12 +35,6 @@ cursor = mdb.cursor(buffered=True)  # buffered cursor means that the database wi
 cursor.execute("SHOW DATABASES")
 
 # functions
-def update(rows):
-    DB.delete(*DB.get_children())  # gets
-    for i in rows:
-        DB.insert('', 'end', values=i)
-
-
 def search():
     q = schVar.get()
     query = "SELECT ID FROM Author, Title, Chapter, Status WHERE Author LIKE '%" + q + "%' OR Title LIKE '%" + q + "%'"
@@ -48,14 +42,24 @@ def search():
     rows = cursor.fetchall()
     update(rows)
 
+def update(rows):
+    DB.delete(*DB.get_children())  # gets
+    for i in rows:
+        DB.insert('', 'end', values=i)
 
-def external_clear():
-    rows = cursor.fetchall(rows)
+def add_mangadb():
+    au = t2.get()#author
+    ttl = t3.get()#title
+    chp = t4.get()#chapter
+    sts = t5.get()#status
+    add = "INSERT INTO mangatable(ID, Author, Title, Chapter, Status) VALUES(NULL, %s, %s, %s, %s)"
+    cursor.execute(add, (au, ttl, chp, sts))
+    clear()
+
+def clear():
     query = "SELECT ID, Author, Title, Chapter, Status FROM mangatable"
-    def internal_clear():
-        global query
-        global rows
-        cursor.execute(query)
+    cursor.execute(query)
+    rows = cursor.fetchall()
     update(rows)
 
 
@@ -71,30 +75,22 @@ def fetch(event):
 def update_mangadb():
     return True
 
-def external_add_mangadb():
-    au = t2.get()#author
-    ttl = t3.get()#title
-    chp = t4.get()#chapter
-    sts = t5.get()#status
-    def internal_add_mangadb():
-        global au
-        global ttl
-        global chp
-        global sts
-        query = "INSERT into mangatable(ID, Author, Title, Chapter, Status), VALUES(NOT NULL, %s, %s, %s, %s, NOW())"#null generates auto increment number from mysql
-        cursor.execute(query,(au, ttl, chp, sts), multi=True)
-    external_clear() #updates table
-
-
-def delete_mangadb():
-    author = t1.get()
+def delete_mangadb(): #THIS NEEDS FIXING
     #prompt to ask if user is sure to delete database
-    if messagebox.askyesno("Are you sure?", "Delete Manga title?"):
-        query = "DELETE FROM Author WHERE ID ="+ID
-        cursor.execute(query)
-        external_clear()
-    else:
-        return True
+    try:
+        confirm = tk.messagebox.askquestion('Delete manga', 'are you sure to delete manga?')
+        if confirm == 'yes':
+            authordata = t2.get()
+            query = "DELETE FROM mangatable WHERE Author = %s"
+            data = (authordata,)
+            cursor.execute(query, authordata)
+            tk.messagebox.showinfo('Delete manga', "Deleted: %d" % cursor.rowcount)
+            clear()
+            root.destroy()
+        else:
+            tk.messagebox.showinfo('Return','Deletion cancelled.')
+    except mysql.connector.Error as err: #done this to error check what happens if data fails to delete
+        print("Error:", err.message)
 
 # These frames are created for the Database
 root = Tk()
@@ -139,7 +135,7 @@ schEnt = Entry(frmSch,
 schEnt.pack(side=tk.LEFT, padx=6)
 schBtn = Button(frmSch, text="Search Manga", command=search)
 schBtn.pack(side=tk.LEFT, padx=6)
-clsBtn = Button(frmSch, text="Clear", command=external_clear)
+clsBtn = Button(frmSch, text="Clear", command= clear)
 clsBtn.pack(side=tk.LEFT, padx=6)
 
 # Manga field Labels, Entries, and Buttons
@@ -173,13 +169,13 @@ cbSts = ttk.Combobox(frmEntries, values=[
 ], textvariable=t5)
 cbSts.grid(column=1, row=4, padx=5, pady=3)
 
-btnUpdate = Button(frmEntries, text="Update Database", command=update_mangadb)
+btnUpdate = Button(frmEntries, text="Update Database", command= update_mangadb)
 btnUpdate.grid(row=2, column=3, padx=5, pady=3)
 
-btnAdd = Button(frmEntries, text="Add to Database", command= external_add_mangadb)
+btnAdd = Button(frmEntries, text="Add to Database", command= add_mangadb)
 btnAdd.grid(row=3, column=3, padx=5, pady=3)
 
-btnDel = Button(frmEntries, text="Delete Data", command=delete_mangadb)
+btnDel = Button(frmEntries, text="Delete Data", command= delete_mangadb)
 btnDel.grid(row=4, column=3, padx=5, pady=3)
 
 root.title("Manga DB")
