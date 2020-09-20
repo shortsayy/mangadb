@@ -73,24 +73,26 @@ def fetch(event):
     t5.set(item['values'][4])
 
 def update_mangadb():
-    return True
-
-def delete_mangadb(): #THIS NEEDS FIXING
-    #prompt to ask if user is sure to delete database
     try:
-        confirm = tk.messagebox.askquestion('Delete manga', 'are you sure to delete manga?')
-        if confirm == 'yes':
-            authordata = t2.get()
-            query = "DELETE FROM mangatable WHERE Author = %s"
-            data = (authordata,)
-            cursor.execute(query, authordata)
-            tk.messagebox.showinfo('Delete manga', "Deleted: %d" % cursor.rowcount)
-            clear()
-            root.destroy()
-        else:
-            tk.messagebox.showinfo('Return','Deletion cancelled.')
+        upd = UPDATE
     except mysql.connector.Error as err: #done this to error check what happens if data fails to delete
-        print("Error:", err.message)
+        print("Error: {}".format(err))
+
+    def delete_mangadb():
+    #prompt to ask if user is sure to delete database
+        try:
+            confirm = tk.messagebox.askquestion('Delete manga', 'are you sure to delete manga?')
+            if confirm == 'yes':
+                audata = t1.get()
+                query = """DELETE FROM mangatable WHERE id = %s"""
+                cursor.execute(query, (audata,))
+                mdb.commit()
+                tk.messagebox.showinfo('Delete manga', 'Deleted: %d' % cursor.rowcount)
+                clear()
+            else:
+                tk.messagebox.showinfo('Return','Deletion cancelled.')
+        except mysql.connector.Error as err: #done this to error check what happens if data fails to delete
+            print("Error: {}".format(err))
 
 # These frames are created for the Database
 root = Tk()
@@ -98,7 +100,7 @@ schVar = StringVar()
 t1 = StringVar()
 t2 = StringVar()
 t3 = StringVar()
-t4 = StringVar() #This is stringint because this is the chapter one, where you need numbers to input data
+t4 = StringVar()
 t5 = StringVar()
 # wrapper and frames
 wrapperDB = LabelFrame(root, text="Manga Database")
