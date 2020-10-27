@@ -35,33 +35,35 @@ cursor = mdb.cursor(buffered=True)  # buffered cursor means that the database wi
 cursor.execute("SHOW DATABASES")
 
 # functions
+def update(rows):
+    try:
+        DB.delete(*DB.get_children())  # gets
+        for i in rows:
+            DB.insert('', 'end', values=i)
+    except mysql.connector.Error as err:
+        print("Update (line45) function error: {}".format(err))
+
 def search():
     q = schVar.get()
-    query = "SELECT ID FROM Author, Title, Chapter, Status WHERE Author LIKE '%" + q + "%' OR Title LIKE '%" + q + "%'"
+    query = "SELECT id, Author, Title, Chapter, Status FROM mangatable WHERE Author like '%"+q+"%' OR Title LIKE '%"+q+"%'"
     cursor.execute(query)
     rows = cursor.fetchall()
     update(rows)
 
-def update(rows):
-    DB.delete(*DB.get_children())  # gets
-    for i in rows:
-        DB.insert('', 'end', values=i)
+def clear():
+    query = "SELECT ID, Author, Title, Chapter, Status FROM mangatable"
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    update(rows)        
 
 def add_mangadb():
     au = t2.get()#author
     ttl = t3.get()#title
     chp = t4.get()#chapter
     sts = t5.get()#status
-    add = "INSERT INTO mangatable(ID, Author, Title, Chapter, Status) VALUES(NULL, %s, %s, %s, %s)"
+    add = """INSERT INTO mangatable(ID, Author, Title, Chapter, Status) VALUES(NULL, %s, %s, %s, %s)"""
     cursor.execute(add, (au, ttl, chp, sts))
     clear()
-
-def clear():
-    query = "SELECT ID, Author, Title, Chapter, Status FROM mangatable"
-    cursor.execute(query)
-    rows = cursor.fetchall()
-    update(rows)
-
 
 def fetch(event):
     rowid = DB.identify_row(event.y)
@@ -74,25 +76,37 @@ def fetch(event):
 
 def update_mangadb():
     try:
-        upd = UPDATE
+        mnid = t1.get()
+        au = t2.get()
+        ttl = t3.get()
+        chp = t4.get()
+        sts = t5.get()
+        confirm = tk.messagebox.askquestion('Update Manga', 'Would you like to update manga? If mistakes were made, you can redo it by pressing the Update button again.')
+        if confirm == 'yes':
+            query = """UPDATE mangadatabase SET Author = %s, Title = %s, Chapter = %s, Status = %s, WHERE id = %s"""
+            cursor.execute(query, (au, ttl, chp, sts, mnid,))
+            mdb.commit()
+            clear()
+        else:
+            return True
     except mysql.connector.Error as err: #done this to error check what happens if data fails to delete
         print("Error: {}".format(err))
 
-    def delete_mangadb():
-    #prompt to ask if user is sure to delete database
-        try:
-            confirm = tk.messagebox.askquestion('Delete manga', 'are you sure to delete manga?')
-            if confirm == 'yes':
-                audata = t1.get()
-                query = """DELETE FROM mangatable WHERE id = %s"""
-                cursor.execute(query, (audata,))
-                mdb.commit()
-                tk.messagebox.showinfo('Delete manga', 'Deleted: %d' % cursor.rowcount)
-                clear()
-            else:
-                tk.messagebox.showinfo('Return','Deletion cancelled.')
-        except mysql.connector.Error as err: #done this to error check what happens if data fails to delete
-            print("Error: {}".format(err))
+def delete_mangadb():
+#prompt to ask if user is sure to delete database
+    try:
+        confirm = tk.messagebox.askquestion('Delete manga', 'are you sure to delete manga?')
+        if confirm == 'yes':
+            audata = t1.get()
+            query = """DELETE FROM mangatable WHERE id = %s"""
+            cursor.execute(query, (audata,))
+            mdb.commit() #trying to commit from cursor would show up errors, so you had to commit from mySQL themselves for it to save the changes.
+            tk.messagebox.showinfo('Delete manga', 'Deleted: %d' % cursor.rowcount)
+            clear()
+        else:
+            tk.messagebox.showinfo('Return','Deletion cancelled.')
+    except mysql.connector.Error as err: #done this to error check what happens if data fails to delete
+        print("Error: {}".format(err))
 
 # These frames are created for the Database
 root = Tk()
@@ -164,7 +178,6 @@ entChp.grid(column=1, row=3, padx=5, pady=3)
 lblSts = Label(frmEntries, text="Status")
 lblSts.grid(column=0, row=4, padx=5, pady=3)
 cbSts = ttk.Combobox(frmEntries, values=[
-    "",
     "Completed",
     "On Hold",
     "Dropped"
